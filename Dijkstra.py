@@ -32,7 +32,7 @@ while CurrentNode.env != goal:
 
 x = CurrentNode.path()
 for node in x:
-    print(node)
+    print(node.env)
 if CurrentNode.env == goal:
         print("success")
         
