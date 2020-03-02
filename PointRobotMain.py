@@ -70,13 +70,27 @@ def draw():
 
 
 def animate(travelList):
+    speed = int((len(travelList) - 1000)*15/50000 + 5)
+    print(speed)
     display.fill((0, 0, 0))
-    for x, y in travelList:
-        pygame.draw.rect(display, (255, 255, 255),
-                         pygame.Rect(x * multiplier, height - y * multiplier, multiplier, multiplier))
+    length = len(travelList)
+    loops = int(length/speed)
+    offset = length - length*speed
+    for i in range(loops):
+        for j in range(speed):
+            index = i*speed+j
+            pygame.draw.rect(display, (255, 255, 255),
+                             pygame.Rect(travelList[index][0] * multiplier, height - travelList[index][1] * multiplier, multiplier, multiplier))
         draw()
         pygame.display.flip()
         clock.tick(ticks)
+    for i in range(offset):
+        pygame.draw.rect(display, (255, 255, 255),
+                         pygame.Rect(travelList[i+loops*speed][0] * multiplier, height - y[i+loops*speed] * multiplier,
+                                     multiplier, multiplier))
+    draw()
+    pygame.display.flip()
+    clock.tick(ticks)
 
 
 def animatePath(travelList):
