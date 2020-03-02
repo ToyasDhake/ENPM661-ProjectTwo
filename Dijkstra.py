@@ -1,4 +1,4 @@
-from RigidRobotMechanism import Environment, Node
+from Mechanism import Environment, Node
 
 
 class Dijkstra:

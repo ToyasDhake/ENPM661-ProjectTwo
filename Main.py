@@ -1,14 +1,24 @@
-from RigidRobotDijkstra import Dijkstra
-from RigidRobotMechanism import Environment
+from Dijkstra import Dijkstra
+from Mechanism import Environment
 from time import time
+import sys
 import os
-
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
-radius = int(input("Enter radius: "))
-clearance = int(input("Enter Clearance: "))
-clearance += radius
+
+pointRobot = False
+if len(sys.argv)>1:
+    if '-p' in sys.argv:
+        pointRobot = True
+
+if pointRobot:
+    clearance = 0
+    radius = 0
+else:
+    radius = int(input("Enter radius: "))
+    clearance = int(input("Enter Clearance: "))
+    clearance += radius
 
 multiplier = 4
 height, width = 200 * multiplier, 300 * multiplier
@@ -84,7 +94,6 @@ def draw():
 
 def animate(travelList):
     speed = int((len(travelList) - 1000)*15/50000 + 5)
-    print(speed)
     display.fill((0, 0, 0))
     length = len(travelList)
     loops = int(length/speed)
