@@ -1,10 +1,14 @@
-from PointRobotDijkstra import Dijkstra
-from PointRobotMechanism import Environment
+from RigidRobotDijkstra import Dijkstra
+from RigidRobotMechanism import Environment
 from time import time
 import os
 
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
+
+radius = int(input("Enter radius: "))
+clearance = int(input("Enter Clearance: "))
+clearance += radius
 
 multiplier = 4
 height, width = 200 * multiplier, 300 * multiplier
@@ -37,10 +41,15 @@ def draw():
     pygame.draw.circle(display, (138, 132, 226), ((225 * multiplier), height - (150 * multiplier)), 25 * multiplier)
     pygame.draw.ellipse(display, (138, 132, 226), pygame.Rect(ellipse))
     if count > 0:
-        env = Environment(coordinates[0])
+        env = Environment(coordinates[0], clearance)
         if env.possiblePostion([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)]):
+            if radius != 0:
+                pygame.draw.circle(display, (0, 0, 255), (coordinates[0][0], coordinates[0][1]), radius * multiplier, 1)
             pygame.draw.rect(display, (0, 0, 255),
                              pygame.Rect(coordinates[0][0], coordinates[0][1], multiplier, multiplier))
+
+
+
             textsurface = myfont.render("Initial Postion", False, (255, 0, 0))
             if height - coordinates[0][1] > 40:
                 display.blit(textsurface, (coordinates[0][0] - 10 * multiplier, coordinates[0][1] + multiplier))
@@ -52,10 +61,14 @@ def draw():
             coordinates.pop(0)
 
     if count > 1:
-        env = Environment(coordinates[1])
+        env = Environment(coordinates[1], clearance)
         if env.possiblePostion([int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)]):
+            if radius != 0:
+                pygame.draw.circle(display, (0, 0, 255), (coordinates[1][0], coordinates[1][1]), radius * multiplier, 1)
             pygame.draw.rect(display, (0, 0, 255),
                              pygame.Rect(coordinates[1][0], coordinates[1][1], multiplier, multiplier))
+
+
             textsurface = myfont.render("Goal Postion", False, (255, 0, 0))
             if height - coordinates[1][1] > 40:
                 display.blit(textsurface, (coordinates[1][0] - 10 * multiplier, coordinates[1][1] + multiplier))
@@ -104,14 +117,19 @@ draw()
 
 start = time()
 dijkstra = Dijkstra([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
-                    [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)])
-path, search = dijkstra.solve()
-end = time()
-print("It took {} seconds to solve.".format(end - start))
-animate(search)
+                    [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
+solution = dijkstra.solve()
+if len(solution) == 3:
+    animate(solution[2])
+    print("Unreachable goal.")
+else:
+    path, search = solution[0], solution[1]
+    end = time()
+    print("It took {} seconds to solve.".format(end - start))
+    animate(search)
 
-animatePath(path)
+    animatePath(path)
 
-pygame.time.wait(3000)
+    pygame.time.wait(3000)
 pygame.quit()
 exit()

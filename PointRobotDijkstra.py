@@ -1,4 +1,4 @@
-from Mechanism import Environment, Node
+from PointRobotMechanism import Environment, Node
 
 
 class Dijkstra:
