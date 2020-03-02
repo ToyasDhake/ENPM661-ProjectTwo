@@ -1,5 +1,6 @@
-from math import sqrt
 from copy import deepcopy
+from math import sqrt
+
 
 class Node:
     def __init__(self, env, parent=None, action=None):
@@ -59,8 +60,9 @@ class Environment:
     def insidePoly(self, position):
         if ((position[0] + 100) <= position[1] and (((7 / 5) * position[0]) + 80) <= position[1] and 185 >= position[1]
             and (13 * position[0] - 140) >= position[1]) or ((((7 / 5) * position[0]) + 80) >= position[1]
-            and (290 - ((7 / 5) * position[0])) >= position[1] and ((6 / 5) * position[0] + 30) <= position[1]
-            and (210 - (6 / 5) * position[0]) <= position[1]):
+                                                             and (290 - ((7 / 5) * position[0])) >= position[1] and (
+                                                                     (6 / 5) * position[0] + 30) <= position[1]
+                                                             and (210 - (6 / 5) * position[0]) <= position[1]):
             return True
         else:
             return False
@@ -132,7 +134,7 @@ class Environment:
         if val == 'R':
             temp.currentPosition[0] += 1
         if val == 'L':
-            temp.currentPosition[1] -= 1
+            temp.currentPosition[0] -= 1
         if val == 'UL':
             temp.currentPosition[0] -= 1
             temp.currentPosition[1] += 1
