@@ -10,11 +10,14 @@ import pygame
 
 pointRobot = False
 aStar = False
+manual = False
 if len(sys.argv)>1:
     if '-p' in sys.argv:
         pointRobot = True
     if '-a' in sys.argv:
         aStar = True
+    if '-m' in sys.argv:
+        manual = True
 
 if pointRobot:
     clearance = 0
@@ -30,6 +33,33 @@ height, width = 200 * multiplier, 300 * multiplier
 running = True
 count = 0
 coordinates = []
+
+env = Environment([0,0], clearance)
+startBool = True
+goalBool = True
+if manual:
+    while startBool:
+        startPos = input("Enter start position: ")
+        startPos = startPos.replace(" ", "")
+        startPos = startPos.split(",")
+        if env.possiblePostion([int(startPos[0]), 200-int(startPos[1])]):
+            coordinates.append([int(startPos[0])*multiplier, (200-int(startPos[1]))*multiplier])
+            count += 1
+            startBool = False
+        else:
+            print("Invalid position.")
+    while goalBool:
+        goalPos = input("Enter goal position: ")
+        goalPos = goalPos.replace(" ", "")
+        goalPos = goalPos.split(",")
+        if env.possiblePostion([int(goalPos[0]), 200-int(goalPos[1])]):
+            coordinates.append([int(goalPos[0])*multiplier, (200-int(goalPos[1]))*multiplier])
+            count += 1
+            goalBool = False
+        else:
+            print("Invalid position.")
+
+
 pygame.init()
 display = pygame.display.set_mode((width, height))
 pygame.font.init()
@@ -128,17 +158,17 @@ def animatePath(travelList):
         pygame.display.flip()
         clock.tick(ticks)
 
-
-while count < 2:
-    display.fill((0, 0, 0))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONUP:
-            x, y = pygame.mouse.get_pos()
-            coordinates.append([x, y])
-            count += 1
-    draw()
+if not manual:
+    while count < 2:
+        display.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONUP:
+                x, y = pygame.mouse.get_pos()
+                coordinates.append([x, y])
+                count += 1
+        draw()
 
 draw()
 if aStar:
