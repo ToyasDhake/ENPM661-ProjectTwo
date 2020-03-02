@@ -2,14 +2,15 @@ from copy import deepcopy
 from math import sqrt
 
 class Node:
-    def __init__(self, env, parent=None, action=None):
+    def __init__(self, env, goal, parent=None, action=None):
         self.env = env
         self.parent = parent
         self.action = action
         if action is not None:
-            self.weight = parent.weight + sqrt(len(action))
+            self.g = parent.g + 1
         else:
-            self.weight = 0
+            self.g = 0
+        self.weight = self.g + sqrt((env[0] - goal[0]) ** 2 + (env[1] - goal[1]) ** 2)
 
     def path(self):
         node, p = self, []
@@ -151,3 +152,36 @@ class Environment:
             temp.currentPosition[0] += 1
             temp.currentPosition[1] -= 1
         return temp
+
+
+
+class AStar:
+    def __init__(self, start, goal, clearance):
+        self.start = start
+        self.goal = goal
+        self.clearance = clearance
+
+    def solve(self):
+        search = []
+        CurrentNode = Node(self.start, self.goal)
+        NodeList = [CurrentNode]
+        NodeDict = {tuple(CurrentNode.env)}
+        while CurrentNode.env != self.goal:
+            if len(NodeList)>0:
+                CurrentNode = NodeList.pop()
+                search.append(CurrentNode.env)
+                Course = Environment(CurrentNode.env, self.clearance)
+                for action in Course.possibleMoves():
+                    temp = Course.move(action)
+                    tempNode = Node(temp.currentPosition, self.goal,  CurrentNode, action)
+                    if tuple(tempNode.env) not in NodeDict:
+                        NodeList.append(tempNode)
+                        NodeDict.add(tuple(tempNode.env))
+                NodeList.sort(key=lambda x: x.weight, reverse=True)
+            else:
+                return -1, CurrentNode.path(), search
+        x = CurrentNode.path()
+        path = []
+        for node in x:
+            path.append(node.env)
+        return path, search
