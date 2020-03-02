@@ -1,5 +1,6 @@
 from Dijkstra import Dijkstra
 from Mechanism import Environment
+from AStar import AStar
 from time import time
 import sys
 import os
@@ -8,9 +9,12 @@ import pygame
 
 
 pointRobot = False
+aStar = False
 if len(sys.argv)>1:
     if '-p' in sys.argv:
         pointRobot = True
+    if '-a' in sys.argv:
+        aStar = True
 
 if pointRobot:
     clearance = 0
@@ -137,22 +141,39 @@ while count < 2:
     draw()
 
 draw()
+if aStar:
+    start = time()
+    aStar = AStar([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
+                        [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
+    solution = aStar.solve()
+    if len(solution) == 3:
+        animate(solution[2])
+        print("Unreachable goal.")
+    else:
+        path, search = solution[0], solution[1]
+        end = time()
+        print("It took {} seconds to solve.".format(end - start))
+        animate(search)
 
-start = time()
-dijkstra = Dijkstra([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
-                    [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
-solution = dijkstra.solve()
-if len(solution) == 3:
-    animate(solution[2])
-    print("Unreachable goal.")
+        animatePath(path)
+
+        pygame.time.wait(3000)
 else:
-    path, search = solution[0], solution[1]
-    end = time()
-    print("It took {} seconds to solve.".format(end - start))
-    animate(search)
+    start = time()
+    dijkstra = Dijkstra([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
+                        [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
+    solution = dijkstra.solve()
+    if len(solution) == 3:
+        animate(solution[2])
+        print("Unreachable goal.")
+    else:
+        path, search = solution[0], solution[1]
+        end = time()
+        print("It took {} seconds to solve.".format(end - start))
+        animate(search)
 
-    animatePath(path)
+        animatePath(path)
 
-    pygame.time.wait(3000)
+        pygame.time.wait(3000)
 pygame.quit()
 exit()
