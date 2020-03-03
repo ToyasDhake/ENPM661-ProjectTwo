@@ -32,12 +32,22 @@ class Environment:
         self.clearance = clearance
 
     def insideRectangle(self, position):
+        temp = False
         if ((1112 / 13) - ((38 / 65) * (position[0]+self.clearance*0.5))) <= (position[1]+self.clearance*0.866) and (position[1]-self.clearance*0.5) <= (
                 ((9 / 5) * (position[0]+self.clearance*0.866)) + 14) and (((8 / 5) * (position[0]-self.clearance*0.866)) - 122) <= (position[1]+self.clearance*0.5) and (position[1]-self.clearance*0.866) <= (
                 98 - ((3 / 5) * (position[0]-self.clearance*0.5))):
-            return True
-        else:
-            return False
+            temp = True
+        if position[1] <= 30 - self.clearance or position[1] >= 77 + self.clearance or position[0] <= 30 - self.clearance or position[0] >= 100 +self.clearance:
+            temp = False
+        if (position[0] - 95) ** 2 + (position[1] - 30) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 30) ** 2 + (position[1] - 68) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 35) ** 2 + (position[1] - 77) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 100) ** 2 + (position[1] - 38) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        return temp
 
     def insideCircle(self, position):
         if (position[0] - 225) ** 2 + (position[1] - 150) ** 2 <= (25+self.clearance) ** 2:
@@ -52,11 +62,21 @@ class Environment:
             return False
 
     def insideDiamond(self, position):
+        temp = False
         if (145 - ((3 / 5) * (position[0]+self.clearance*0.5))) <= (position[1]+self.clearance*0.866) and (((3 / 5) * (position[0]-self.clearance*0.5)) - 125) <= (position[1]+self.clearance*0.866) and (
                 175 - ((3 / 5) * (position[0]-self.clearance*0.5))) >= (position[1]-self.clearance*0.866) and (((3 / 5) * (position[0]+self.clearance*0.5)) - 95) >= (position[1]-self.clearance*0.866):
-            return True
-        else:
-            return False
+            temp =  True
+        if position[1] >= 40 + self.clearance or position[1] <= 10 - self.clearance/2 or position[0] <= 200 - self.clearance/2 or position[0] >= 250 + self.clearance/2:
+            temp = False
+        if (position[0] - 225) ** 2 + (position[1] - 10) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 200) ** 2 + (position[1] - 25) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 225) ** 2 + (position[1] - 40) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 250) ** 2 + (position[1] - 25) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        return temp
 
     def insidePoly(self, position):
         temp  = False
@@ -68,7 +88,24 @@ class Environment:
             temp =  True
         if (((7 / 5) * position[0]) + 80) >= position[1] and (210 - (6 / 5) * (position[0]+self.clearance*0.7682)) >= (position[1]+self.clearance*0.64023) and ((position[0]-self.clearance*0.7071) + 100) <= (position[1]+self.clearance*0.7071):
             temp =  True
-
+        if position[0] + 160 + self.clearance/2 <= position[1]:
+            temp = False
+        if  228.2975 + self.clearance/2 - 0.5773 *position[0] <= position[1]:
+            temp = False
+        if position[1] <= 120 - self.clearance/2  and temp:
+            temp = False
+        if position[0] >= 100 + self.clearance and temp:
+            temp = False
+        if (position[0] - 20) ** 2 + (position[1] - 120) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 75) ** 2 + (position[1] - 120) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 100) ** 2 + (position[1] - 150) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 75) ** 2 + (position[1] - 185) ** 2 <= (self.clearance) ** 2:
+            temp = True
+        if (position[0] - 25) ** 2 + (position[1] - 185) ** 2 <= (self.clearance) ** 2:
+            temp = True
         return temp
 
     def possiblePostion(self, position):
