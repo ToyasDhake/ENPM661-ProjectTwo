@@ -41,8 +41,8 @@ To enter start and goal position from command line use argument "-m":
 open terminal in project folder.
 python Main.py -m
 Enter radius and clearance
-Enter start position
-Enter goal position
+Enter start position as "5, 5" (without qoutes)
+Enter goal position as "295, 195" (without qoutes)
 click on the pygame window to set start position and goal posiiton.
 ```
 Main.py arguments
@@ -64,7 +64,13 @@ Point robot A*|Rigid robot A*
 ![](pointAStar.gif)  |   ![](rigidAStar.gif)
 
 
+#### Runtime
 
+It takes approximatly 10 seconds for Dijkstra's algorithm to find path from (5, 5) to (295, 195).
+
+System configuration- 
+- CPU: Intel Core i7-9750H @3.9 GHz x12
+- RAM: 16 GB
 
 
 ## Contributors
