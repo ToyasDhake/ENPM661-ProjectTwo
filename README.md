@@ -26,34 +26,48 @@ Run code Main.py for demo-
 open terminal in project folder.
 python Main.py
 Enter radius and clearance
-click on the pygame window to set start position and goal posiiton.
+Enter start position as "5, 5" (without qoutes)
+Enter goal position as "295, 195" (without qoutes)
 ```
 
 By default code runs for rigid robot. To compute path for point robot use argument "-p":
 ```
 open terminal in project folder.
 python Main.py -p
-click on the pygame window to set start position and goal posiiton.
+Enter start position as "5, 5" (without qoutes)
+Enter goal position as "295, 195" (without qoutes)
 ```
 
 To enter start and goal position from command line use argument "-m":
 ```
 open terminal in project folder.
-python Main.py -m
+python Main.py -g
 Enter radius and clearance
-Enter start position as "5, 5" (without qoutes)
-Enter goal position as "295, 195" (without qoutes)
 click on the pygame window to set start position and goal posiiton.
 ```
+
+A* implementation:
+```
+open terminal in project folder.
+python Main.py -p -g -a
+click on the pygame window to set start position and goal posiiton.
+```
+
 Main.py arguments
 
 -p ,    Use point robot.
 
--m,     Enter Start and goal positions in command line instead of using GUI.
+-g,     Using GUI instead of entering start and goal positions in command line.
 
 -a,     Use A* algorithm to solve the problem instead of Dijkstra's algorithm.
 
 By default Main.py uses Dijkstra's algorithm's on a rigid robot and accept start and goal positions from GUI.
+
+Installing pygame
+```
+pip install pygame
+```
+
 
 ## Results
 
@@ -71,11 +85,6 @@ It takes approximatly 10 seconds for Dijkstra's algorithm to find path from (5, 
 System configuration- 
 - CPU: Intel Core i7-9750H @3.9 GHz x12
 - RAM: 16 GB
-
-### Limitations
-
-Sometimes, depending on system pygame windows shows it is not responding during computing path because event.get() not being called. 
-This occurred most of the time in Windows but we did not encounter it on ubuntu. Code should not take more than a minute in any situation in that case it is not responding.
 
 ## Contributors
 

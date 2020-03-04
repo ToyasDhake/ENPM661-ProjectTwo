@@ -10,14 +10,14 @@ import pygame
 
 pointRobot = False
 aStar = False
-manual = False
+manual = True
 if len(sys.argv) > 1:
     if '-p' in sys.argv:
         pointRobot = True
     if '-a' in sys.argv:
         aStar = True
-    if '-m' in sys.argv:
-        manual = True
+    if '-g' in sys.argv:
+        manual = False
 
 if pointRobot:
     clearance = 0
@@ -58,13 +58,13 @@ if manual:
             goalBool = False
         else:
             print("Invalid position.")
-
-pygame.init()
-display = pygame.display.set_mode((width, height))
-pygame.font.init()
-myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
-ticks = 400
-clock = pygame.time.Clock()
+if not manual:
+    pygame.init()
+    display = pygame.display.set_mode((width, height))
+    pygame.font.init()
+    myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
+    ticks = 400
+    clock = pygame.time.Clock()
 
 hexagon = [((25 * multiplier), height - (185 * multiplier)), ((75 * multiplier), height - (185 * multiplier)),
            ((100 * multiplier), height - (150 * multiplier)), ((75 * multiplier), height - (120 * multiplier)),
@@ -172,7 +172,10 @@ if not manual:
                 count += 1
         draw()
 
-draw()
+    pygame.time.wait(1000)
+    pygame.quit()
+
+print("Computing...")
 if aStar:
     start = time()
     aStar = AStar([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
@@ -182,6 +185,12 @@ if aStar:
         animate(solution[2])
         print("Unreachable goal.")
     else:
+        pygame.init()
+        display = pygame.display.set_mode((width, height))
+        pygame.font.init()
+        myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
+        ticks = 400
+        clock = pygame.time.Clock()
         path, search = solution[0], solution[1]
         end = time()
         print("It took {} seconds to solve.".format(end - start))
@@ -199,6 +208,12 @@ else:
         animate(solution[2])
         print("Unreachable goal.")
     else:
+        pygame.init()
+        display = pygame.display.set_mode((width, height))
+        pygame.font.init()
+        myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
+        ticks = 400
+        clock = pygame.time.Clock()
         path, search = solution[0], solution[1]
         end = time()
         print("It took {} seconds to solve.".format(end - start))
