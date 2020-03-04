@@ -133,6 +133,7 @@ def animate(travelList):
     loops = int(length/speed)
     offset = length - length*speed
     for i in range(loops):
+        pygame.event.get()
         for j in range(speed):
             index = i*speed+j
             pygame.draw.rect(display, (255, 255, 255),
@@ -141,6 +142,7 @@ def animate(travelList):
         pygame.display.flip()
         clock.tick(ticks)
     for i in range(offset):
+        pygame.event.get()
         pygame.draw.rect(display, (255, 255, 255),
                          pygame.Rect(travelList[i+loops*speed][0] * multiplier, height - y[i+loops*speed] * multiplier,
                                      multiplier, multiplier))
