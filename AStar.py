@@ -1,6 +1,7 @@
 from copy import deepcopy
 from math import sqrt
 
+
 class Node:
     def __init__(self, env, goal, parent=None, action=None):
         self.env = env
@@ -33,11 +34,15 @@ class Environment:
 
     def insideRectangle(self, position):
         temp = False
-        if ((1112 / 13) - ((38 / 65) * (position[0]+self.clearance*0.5))) <= (position[1]+self.clearance*0.866) and (position[1]-self.clearance*0.5) <= (
-                ((9 / 5) * (position[0]+self.clearance*0.866)) + 14) and (((8 / 5) * (position[0]-self.clearance*0.866)) - 122) <= (position[1]+self.clearance*0.5) and (position[1]-self.clearance*0.866) <= (
-                98 - ((3 / 5) * (position[0]-self.clearance*0.5))):
+        if ((1112 / 13) - ((38 / 65) * (position[0] + self.clearance * 0.5))) <= (
+                position[1] + self.clearance * 0.866) and (position[1] - self.clearance * 0.5) <= (
+                ((9 / 5) * (position[0] + self.clearance * 0.866)) + 14) and (
+                ((8 / 5) * (position[0] - self.clearance * 0.866)) - 122) <= (position[1] + self.clearance * 0.5) and (
+                position[1] - self.clearance * 0.866) <= (
+                98 - ((3 / 5) * (position[0] - self.clearance * 0.5))):
             temp = True
-        if position[1] <= 30 - self.clearance or position[1] >= 77 + self.clearance or position[0] <= 30 - self.clearance or position[0] >= 100 +self.clearance:
+        if position[1] <= 30 - self.clearance or position[1] >= 77 + self.clearance or position[
+            0] <= 30 - self.clearance or position[0] >= 100 + self.clearance:
             temp = False
         if (position[0] - 95) ** 2 + (position[1] - 30) ** 2 <= (self.clearance) ** 2:
             temp = True
@@ -50,23 +55,27 @@ class Environment:
         return temp
 
     def insideCircle(self, position):
-        if (position[0] - 225) ** 2 + (position[1] - 150) ** 2 <= (25+self.clearance) ** 2:
+        if (position[0] - 225) ** 2 + (position[1] - 150) ** 2 <= (25 + self.clearance) ** 2:
             return True
         else:
             return False
 
     def insideElipse(self, position):
-        if ((position[0] - 150) ** 2) / (40 + self.clearance) ** 2 + ((position[1] - 100) ** 2) / (20 + self.clearance) ** 2 <= 1:
+        if ((position[0] - 150) ** 2) / (40 + self.clearance) ** 2 + ((position[1] - 100) ** 2) / (
+                20 + self.clearance) ** 2 <= 1:
             return True
         else:
             return False
 
     def insideDiamond(self, position):
         temp = False
-        if (145 - ((3 / 5) * (position[0]+self.clearance*0.5))) <= (position[1]+self.clearance*0.866) and (((3 / 5) * (position[0]-self.clearance*0.5)) - 125) <= (position[1]+self.clearance*0.866) and (
-                175 - ((3 / 5) * (position[0]-self.clearance*0.5))) >= (position[1]-self.clearance*0.866) and (((3 / 5) * (position[0]+self.clearance*0.5)) - 95) >= (position[1]-self.clearance*0.866):
-            temp =  True
-        if position[1] >= 40 + self.clearance or position[1] <= 10 - self.clearance/2 or position[0] <= 200 - self.clearance/2 or position[0] >= 250 + self.clearance/2:
+        if (145 - ((3 / 5) * (position[0] + self.clearance * 0.5))) <= (position[1] + self.clearance * 0.866) and (
+                ((3 / 5) * (position[0] - self.clearance * 0.5)) - 125) <= (position[1] + self.clearance * 0.866) and (
+                175 - ((3 / 5) * (position[0] - self.clearance * 0.5))) >= (position[1] - self.clearance * 0.866) and (
+                ((3 / 5) * (position[0] + self.clearance * 0.5)) - 95) >= (position[1] - self.clearance * 0.866):
+            temp = True
+        if position[1] >= 40 + self.clearance or position[1] <= 10 - self.clearance / 2 or position[
+            0] <= 200 - self.clearance / 2 or position[0] >= 250 + self.clearance / 2:
             temp = False
         if (position[0] - 225) ** 2 + (position[1] - 10) ** 2 <= (self.clearance) ** 2:
             temp = True
@@ -79,20 +88,28 @@ class Environment:
         return temp
 
     def insidePoly(self, position):
-        temp  = False
-        if (((position[0]-self.clearance*0.7071) + 100) <= (position[1]+self.clearance*0.7071) and (((7 / 5) * position[0]) + 80) <= position[1] and 185  >= position[1] - self.clearance*1
-            and (13 * (position[0]+self.clearance*0.997) - 140) >= (position[1]-self.clearance*0.07672)) or ((((7 / 5) * position[0]) + 80) >= position[1]
-                                                             and (290 - ((7 / 5) * (position[0]-self.clearance*0.8137))) >= (position[1]-self.clearance*0.5812) and (
-                                                                     (6 / 5) * (position[0]-self.clearance*0.7682) + 30) <= (position[1]+self.clearance*0.64023)
-                                                             and (210 - (6 / 5) * (position[0]+self.clearance*0.7682)) <= (position[1]+self.clearance*0.64023)):
-            temp =  True
-        if (((7 / 5) * position[0]) + 80) >= position[1] and (210 - (6 / 5) * (position[0]+self.clearance*0.7682)) >= (position[1]+self.clearance*0.64023) and ((position[0]-self.clearance*0.7071) + 100) <= (position[1]+self.clearance*0.7071):
-            temp =  True
-        if position[0] + 160 + self.clearance/2 <= position[1]:
+        temp = False
+        if (((position[0] - self.clearance * 0.7071) + 100) <= (position[1] + self.clearance * 0.7071) and (
+                ((7 / 5) * position[0]) + 80) <= position[1] and 185 >= position[1] - self.clearance * 1
+            and (13 * (position[0] + self.clearance * 0.997) - 140) >= (position[1] - self.clearance * 0.07672)) or (
+                (((7 / 5) * position[0]) + 80) >= position[1]
+                and (290 - ((7 / 5) * (position[0] - self.clearance * 0.8137))) >= (
+                        position[1] - self.clearance * 0.5812) and (
+                        (6 / 5) * (position[0] - self.clearance * 0.7682) + 30) <= (
+                        position[1] + self.clearance * 0.64023)
+                and (210 - (6 / 5) * (position[0] + self.clearance * 0.7682)) <= (
+                        position[1] + self.clearance * 0.64023)):
+            temp = True
+        if (((7 / 5) * position[0]) + 80) >= position[1] and (
+                210 - (6 / 5) * (position[0] + self.clearance * 0.7682)) >= (
+                position[1] + self.clearance * 0.64023) and ((position[0] - self.clearance * 0.7071) + 100) <= (
+                position[1] + self.clearance * 0.7071):
+            temp = True
+        if position[0] + 160 + self.clearance / 2 <= position[1]:
             temp = False
-        if  228.2975 + self.clearance/2 - 0.5773 *position[0] <= position[1]:
+        if 228.2975 + self.clearance / 2 - 0.5773 * position[0] <= position[1]:
             temp = False
-        if position[1] <= 120 - self.clearance/2  and temp:
+        if position[1] <= 120 - self.clearance / 2 and temp:
             temp = False
         if position[0] >= 100 + self.clearance and temp:
             temp = False
@@ -191,7 +208,6 @@ class Environment:
         return temp
 
 
-
 class AStar:
     def __init__(self, start, goal, clearance):
         self.start = start
@@ -204,16 +220,25 @@ class AStar:
         NodeList = [CurrentNode]
         NodeDict = {tuple(CurrentNode.env)}
         while CurrentNode.env != self.goal:
-            if len(NodeList)>0:
+            if len(NodeList) > 0:
                 CurrentNode = NodeList.pop()
                 search.append(CurrentNode.env)
                 Course = Environment(CurrentNode.env, self.clearance)
                 for action in Course.possibleMoves():
                     temp = Course.move(action)
-                    tempNode = Node(temp.currentPosition, self.goal,  CurrentNode, action)
+                    tempNode = Node(temp.currentPosition, self.goal, CurrentNode, action)
                     if tuple(tempNode.env) not in NodeDict:
                         NodeList.append(tempNode)
                         NodeDict.add(tuple(tempNode.env))
+                    else:
+                        for i in range(len(NodeList)):
+                            if NodeList[i].env == tempNode.env:
+                                distNodeList = sqrt((NodeList[i].parent.env[0] - self.start[0]) ** 2 + (
+                                            NodeList[i].parent.env[1] - self.start[1]) ** 2)
+                                distTempNode = sqrt((tempNode.parent.env[0] - self.start[0]) ** 2 + (
+                                            tempNode.parent.env[1] - self.start[1]) ** 2)
+                                if distTempNode < distNodeList:
+                                    NodeList[i] = tempNode
                 NodeList.sort(key=lambda x: x.weight, reverse=True)
             else:
                 return -1, CurrentNode.path(), search

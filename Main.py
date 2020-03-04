@@ -4,14 +4,14 @@ from AStar import AStar
 from time import time
 import sys
 import os
+
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
-
 
 pointRobot = False
 aStar = False
 manual = False
-if len(sys.argv)>1:
+if len(sys.argv) > 1:
     if '-p' in sys.argv:
         pointRobot = True
     if '-a' in sys.argv:
@@ -34,7 +34,7 @@ running = True
 count = 0
 coordinates = []
 
-env = Environment([0,0], clearance)
+env = Environment([0, 0], clearance)
 startBool = True
 goalBool = True
 if manual:
@@ -42,8 +42,8 @@ if manual:
         startPos = input("Enter start position: ")
         startPos = startPos.replace(" ", "")
         startPos = startPos.split(",")
-        if env.possiblePostion([int(startPos[0]), 200-int(startPos[1])]):
-            coordinates.append([int(startPos[0])*multiplier, (200-int(startPos[1]))*multiplier])
+        if env.possiblePostion([int(startPos[0]), 200 - int(startPos[1])]):
+            coordinates.append([int(startPos[0]) * multiplier, (200 - int(startPos[1])) * multiplier])
             count += 1
             startBool = False
         else:
@@ -52,13 +52,12 @@ if manual:
         goalPos = input("Enter goal position: ")
         goalPos = goalPos.replace(" ", "")
         goalPos = goalPos.split(",")
-        if env.possiblePostion([int(goalPos[0]), 200-int(goalPos[1])]):
-            coordinates.append([int(goalPos[0])*multiplier, (200-int(goalPos[1]))*multiplier])
+        if env.possiblePostion([int(goalPos[0]), 200 - int(goalPos[1])]):
+            coordinates.append([int(goalPos[0]) * multiplier, (200 - int(goalPos[1])) * multiplier])
             count += 1
             goalBool = False
         else:
             print("Invalid position.")
-
 
 pygame.init()
 display = pygame.display.set_mode((width, height))
@@ -92,8 +91,6 @@ def draw():
             pygame.draw.rect(display, (0, 0, 255),
                              pygame.Rect(coordinates[0][0], coordinates[0][1], multiplier, multiplier))
 
-
-
             textsurface = myfont.render("Initial Postion", False, (255, 0, 0))
             if height - coordinates[0][1] > 40:
                 display.blit(textsurface, (coordinates[0][0] - 10 * multiplier, coordinates[0][1] + multiplier))
@@ -112,7 +109,6 @@ def draw():
             pygame.draw.rect(display, (0, 0, 255),
                              pygame.Rect(coordinates[1][0], coordinates[1][1], multiplier, multiplier))
 
-
             textsurface = myfont.render("Goal Postion", False, (255, 0, 0))
             if height - coordinates[1][1] > 40:
                 display.blit(textsurface, (coordinates[1][0] - 10 * multiplier, coordinates[1][1] + multiplier))
@@ -127,24 +123,26 @@ def draw():
 
 
 def animate(travelList):
-    speed = int((len(travelList) - 1000)*15/50000 + 5)
+    speed = int((len(travelList) - 1000) * 15 / 50000 + 5)
     display.fill((0, 0, 0))
     length = len(travelList)
-    loops = int(length/speed)
-    offset = length - length*speed
+    loops = int(length / speed)
+    offset = length - length * speed
     for i in range(loops):
         pygame.event.get()
         for j in range(speed):
-            index = i*speed+j
+            index = i * speed + j
             pygame.draw.rect(display, (255, 255, 255),
-                             pygame.Rect(travelList[index][0] * multiplier, height - travelList[index][1] * multiplier, multiplier, multiplier))
+                             pygame.Rect(travelList[index][0] * multiplier, height - travelList[index][1] * multiplier,
+                                         multiplier, multiplier))
         draw()
         pygame.display.flip()
         clock.tick(ticks)
     for i in range(offset):
         pygame.event.get()
         pygame.draw.rect(display, (255, 255, 255),
-                         pygame.Rect(travelList[i+loops*speed][0] * multiplier, height - y[i+loops*speed] * multiplier,
+                         pygame.Rect(travelList[i + loops * speed][0] * multiplier,
+                                     height - y[i + loops * speed] * multiplier,
                                      multiplier, multiplier))
     draw()
     pygame.display.flip()
@@ -154,11 +152,13 @@ def animate(travelList):
 def animatePath(travelList):
     display.fill((0, 0, 0))
     for x, y in travelList:
+        pygame.event.get()
         pygame.draw.rect(display, (0, 255, 0),
                          pygame.Rect(x * multiplier, height - y * multiplier, multiplier, multiplier))
         draw()
         pygame.display.flip()
         clock.tick(ticks)
+
 
 if not manual:
     while count < 2:
@@ -176,7 +176,7 @@ draw()
 if aStar:
     start = time()
     aStar = AStar([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
-                        [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
+                  [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
     solution = aStar.solve()
     if len(solution) == 3:
         animate(solution[2])

@@ -13,7 +13,7 @@ class Dijkstra:
         NodeList = [CurrentNode]
         NodeDict = {tuple(CurrentNode.env)}
         while CurrentNode.env != self.goal:
-            if len(NodeList)>0:
+            if len(NodeList) > 0:
                 CurrentNode = NodeList.pop()
                 search.append(CurrentNode.env)
                 Course = Environment(CurrentNode.env, self.clearance)

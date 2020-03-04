@@ -72,6 +72,10 @@ System configuration-
 - CPU: Intel Core i7-9750H @3.9 GHz x12
 - RAM: 16 GB
 
+### Limitations
+
+Sometimes, depending on system pygame windows shows it is not responding during computing path because event.get() not being called. 
+This occurred most of the time in Windows but we did not encounter it on ubuntu. Code should not take more than a minute in any situation in that case it is not responding.
 
 ## Contributors
 
