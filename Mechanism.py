@@ -1,24 +1,28 @@
 from copy import deepcopy
 from math import sqrt
 
-
+# This class will hold attributes of each position
 class Node:
+    # Initialize 
     def __init__(self, env, parent=None, action=None):
         self.env = env
         self.parent = parent
         self.action = action
         if action is not None:
+            # add cost based on action taken
             self.weight = parent.weight + sqrt(len(action))
         else:
             self.weight = 0
 
+    # Solve for path from goal to start node
     def path(self):
         node, p = self, []
         while node:
             p.append(node)
             node = node.parent
         yield from reversed(p)
-
+    
+    # Get possible actions
     def actions(self):
         if self.action is None:
             return self.env.possibleMoves()
@@ -27,10 +31,12 @@ class Node:
 
 
 class Environment:
+    # Initialize 
     def __init__(self, currentPosition, clearance):
         self.currentPosition = currentPosition
         self.clearance = clearance
 
+    # Check if node is in rectangle using half planes
     def insideRectangle(self, position):
         temp = False
         if ((1112 / 13) - ((38 / 65) * (position[0] + self.clearance * 0.5))) <= (
@@ -53,12 +59,14 @@ class Environment:
             temp = True
         return temp
 
+    # Check if node is in cirlce 
     def insideCircle(self, position):
         if (position[0] - 225) ** 2 + (position[1] - 150) ** 2 <= (25 + self.clearance) ** 2:
             return True
         else:
             return False
 
+    # Check if node is in elipse
     def insideElipse(self, position):
         if ((position[0] - 150) ** 2) / (40 + self.clearance) ** 2 + ((position[1] - 100) ** 2) / (
                 20 + self.clearance) ** 2 <= 1:
@@ -66,6 +74,7 @@ class Environment:
         else:
             return False
 
+    # Check if node is in diamond using half planes
     def insideDiamond(self, position):
         temp = False
         if (145 - ((3 / 5) * (position[0] + self.clearance * 0.5))) <= (position[1] + self.clearance * 0.866) and (
@@ -86,6 +95,7 @@ class Environment:
             temp = True
         return temp
 
+    # Check if node is in polygon using half planes
     def insidePoly(self, position):
         temp = False
         if (((position[0] - self.clearance * 0.7071) + 100) <= (position[1] + self.clearance * 0.7071) and (
@@ -124,6 +134,7 @@ class Environment:
             temp = True
         return temp
 
+    # Check if position is inside map or inside an object
     def possiblePostion(self, position):
         possiblity = True
         if position[0] < self.clearance:
@@ -146,6 +157,7 @@ class Environment:
             possiblity = False
         return possiblity
 
+    # Check if each action is possible
     def possibleMoves(self, remove='A'):
         actions = []
         if self.possiblePostion([self.currentPosition[0], self.currentPosition[1] + 1]):
@@ -182,6 +194,7 @@ class Environment:
             actions.remove('UL')
         return actions
 
+    # Move robot position according to action
     def move(self, val):
         temp = deepcopy(self)
         if val == 'U':

@@ -207,7 +207,7 @@ class Environment:
             temp.currentPosition[1] -= 1
         return temp
 
-
+# AStar class is called to solve for path using A*
 class AStar:
     def __init__(self, start, goal, clearance):
         self.start = start

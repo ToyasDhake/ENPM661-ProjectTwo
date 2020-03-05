@@ -1,3 +1,6 @@
+# ENPM661 Project 2
+# Contributors Toyas Dhake
+
 from Dijkstra import Dijkstra
 from Mechanism import Environment
 from AStar import AStar
@@ -8,9 +11,12 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
+# Different options to run solver
 pointRobot = False
 aStar = False
 manual = True
+
+# Arguments 
 if len(sys.argv) > 1:
     if '-p' in sys.argv:
         pointRobot = True
@@ -19,10 +25,12 @@ if len(sys.argv) > 1:
     if '-g' in sys.argv:
         manual = False
 
+# Set clearance and radius to 0 if robot is a point robot
 if pointRobot:
     clearance = 0
     radius = 0
 else:
+    # add a radius and clearance for a non-point robot
     radius = int(input("Enter radius: "))
     clearance = int(input("Enter Clearance: "))
     clearance += radius
@@ -37,35 +45,49 @@ coordinates = []
 env = Environment([0, 0], clearance)
 startBool = True
 goalBool = True
+
+# Manual Mode
 if manual:
     while startBool:
+        # Get start node from user
         startPos = input("Enter start position: ")
         
+        #Format input to use in code
         if "," in startPos:
             startPos = startPos.replace(" ", "")
             startPos = startPos.split(",")
         else: 
             startPos = startPos.split(" ")
+
+        # Check to see if input is valid
         if env.possiblePostion([int(startPos[0]), 200 - int(startPos[1])]):
             coordinates.append([int(startPos[0]) * multiplier, (200 - int(startPos[1])) * multiplier])
             count += 1
             startBool = False
         else:
             print("Invalid position.")
+
+
     while goalBool:
+        # Get goal node from user
         goalPos = input("Enter goal position: ")
         
+        #Format input to use in code
         if "," in goalPos: 
             goalPos = goalPos.replace(" ", "")
             goalPos = goalPos.split(",")
         else: 
             goalPos = goalPos.split(" ")
+
+        # Check to see if input is valid
         if env.possiblePostion([int(goalPos[0]), 200 - int(goalPos[1])]):
             coordinates.append([int(goalPos[0]) * multiplier, (200 - int(goalPos[1])) * multiplier])
             count += 1
             goalBool = False
         else:
             print("Invalid position.")
+
+# Start pygame if user wants to pick start and goal points in map
 if not manual:
     pygame.init()
     display = pygame.display.set_mode((width, height))
@@ -74,6 +96,7 @@ if not manual:
     ticks = 400
     clock = pygame.time.Clock()
 
+# Build map
 hexagon = [((25 * multiplier), height - (185 * multiplier)), ((75 * multiplier), height - (185 * multiplier)),
            ((100 * multiplier), height - (150 * multiplier)), ((75 * multiplier), height - (120 * multiplier)),
            ((50 * multiplier), height - (150 * multiplier)), ((20 * multiplier), height - (120 * multiplier))]
@@ -83,7 +106,7 @@ diamond = [((225 * multiplier), height - (10 * multiplier)), ((200 * multiplier)
            ((225 * multiplier), height - (40 * multiplier)), ((250 * multiplier), height - (25 * multiplier))]
 ellipse = [(110 * multiplier), (height - (120 * multiplier)), (80 * multiplier), (40 * multiplier)]
 
-
+# Draw Map
 def draw():
     global count
     pygame.draw.polygon(display, (138, 132, 226), hexagon)
@@ -91,10 +114,13 @@ def draw():
     pygame.draw.polygon(display, (138, 132, 226), diamond)
     pygame.draw.circle(display, (138, 132, 226), ((225 * multiplier), height - (150 * multiplier)), 25 * multiplier)
     pygame.draw.ellipse(display, (138, 132, 226), pygame.Rect(ellipse))
+
+    
     if count > 0:
         env = Environment(coordinates[0], clearance)
         if env.possiblePostion([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)]):
             if radius != 0:
+                
                 pygame.draw.circle(display, (0, 0, 255), (coordinates[0][0], coordinates[0][1]), radius * multiplier, 1)
             pygame.draw.rect(display, (0, 0, 255),
                              pygame.Rect(coordinates[0][0], coordinates[0][1], multiplier, multiplier))
@@ -129,7 +155,7 @@ def draw():
     pygame.display.flip()
     clock.tick(ticks)
 
-
+# Animate all of the explored nodes
 def animate(travelList):
     speed = int((len(travelList) - 1000) * 15 / 50000 + 5)
     display.fill((0, 0, 0))
@@ -156,7 +182,7 @@ def animate(travelList):
     pygame.display.flip()
     clock.tick(ticks)
 
-
+# Animate the final path after it finds the goal node
 def animatePath(travelList):
     display.fill((0, 0, 0))
     for x, y in travelList:
@@ -167,7 +193,7 @@ def animatePath(travelList):
         pygame.display.flip()
         clock.tick(ticks)
 
-
+# Exit pygame after position inputs so windows doesn't crash
 if not manual:
     while count < 2:
         display.fill((0, 0, 0))
@@ -183,7 +209,10 @@ if not manual:
     pygame.time.wait(1000)
     pygame.quit()
 
+
 print("Computing...")
+
+# Use A* to solve for path
 if aStar:
     start = time()
     aStar = AStar([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
@@ -207,6 +236,8 @@ if aStar:
         animatePath(path)
 
         pygame.time.wait(3000)
+
+# Use Dijkstra to solve for path
 else:
     start = time()
     dijkstra = Dijkstra([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
