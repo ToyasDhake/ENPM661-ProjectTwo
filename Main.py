@@ -40,8 +40,12 @@ goalBool = True
 if manual:
     while startBool:
         startPos = input("Enter start position: ")
-        startPos = startPos.replace(" ", "")
-        startPos = startPos.split(",")
+        
+        if "," in startPos:
+            startPos = startPos.replace(" ", "")
+            startPos = startPos.split(",")
+        else: 
+            startPos = startPos.split(" ")
         if env.possiblePostion([int(startPos[0]), 200 - int(startPos[1])]):
             coordinates.append([int(startPos[0]) * multiplier, (200 - int(startPos[1])) * multiplier])
             count += 1
@@ -50,8 +54,12 @@ if manual:
             print("Invalid position.")
     while goalBool:
         goalPos = input("Enter goal position: ")
-        goalPos = goalPos.replace(" ", "")
-        goalPos = goalPos.split(",")
+        
+        if "," in goalPos: 
+            goalPos = goalPos.replace(" ", "")
+            goalPos = goalPos.split(",")
+        else: 
+            goalPos = goalPos.split(" ")
         if env.possiblePostion([int(goalPos[0]), 200 - int(goalPos[1])]):
             coordinates.append([int(goalPos[0]) * multiplier, (200 - int(goalPos[1])) * multiplier])
             count += 1
