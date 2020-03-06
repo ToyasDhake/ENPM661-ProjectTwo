@@ -207,7 +207,7 @@ if not manual:
         draw()
 
     pygame.time.wait(1000)
-    pygame.quit()
+    pygame.display.quit()
 
 
 print("Computing...")
