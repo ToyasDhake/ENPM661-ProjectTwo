@@ -53,7 +53,7 @@ python Dijkstra_point.py -g -a
 click on the pygame window to set start position and goal posiiton.
 ```
 
-Main.py arguments
+Arguments
 
 -g,     Using GUI instead of entering start and goal positions in command line.
 
