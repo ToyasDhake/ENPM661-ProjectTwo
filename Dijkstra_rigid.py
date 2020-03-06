@@ -18,8 +18,6 @@ manual = True
 
 # Arguments 
 if len(sys.argv) > 1:
-    if '-p' in sys.argv:
-        pointRobot = True
     if '-a' in sys.argv:
         aStar = True
     if '-g' in sys.argv:
@@ -51,12 +49,12 @@ if manual:
     while startBool:
         # Get start node from user
         startPos = input("Enter start position: ")
-        
-        #Format input to use in code
+
+        # Format input to use in code
         if "," in startPos:
             startPos = startPos.replace(" ", "")
             startPos = startPos.split(",")
-        else: 
+        else:
             startPos = startPos.split(" ")
 
         # Check to see if input is valid
@@ -67,16 +65,15 @@ if manual:
         else:
             print("Invalid position.")
 
-
     while goalBool:
         # Get goal node from user
         goalPos = input("Enter goal position: ")
-        
-        #Format input to use in code
-        if "," in goalPos: 
+
+        # Format input to use in code
+        if "," in goalPos:
             goalPos = goalPos.replace(" ", "")
             goalPos = goalPos.split(",")
-        else: 
+        else:
             goalPos = goalPos.split(" ")
 
         # Check to see if input is valid
@@ -106,6 +103,7 @@ diamond = [((225 * multiplier), height - (10 * multiplier)), ((200 * multiplier)
            ((225 * multiplier), height - (40 * multiplier)), ((250 * multiplier), height - (25 * multiplier))]
 ellipse = [(110 * multiplier), (height - (120 * multiplier)), (80 * multiplier), (40 * multiplier)]
 
+
 # Draw Map
 def draw():
     global count
@@ -115,12 +113,10 @@ def draw():
     pygame.draw.circle(display, (138, 132, 226), ((225 * multiplier), height - (150 * multiplier)), 25 * multiplier)
     pygame.draw.ellipse(display, (138, 132, 226), pygame.Rect(ellipse))
 
-    
     if count > 0:
         env = Environment(coordinates[0], clearance)
         if env.possiblePostion([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)]):
             if radius != 0:
-                
                 pygame.draw.circle(display, (0, 0, 255), (coordinates[0][0], coordinates[0][1]), radius * multiplier, 1)
             pygame.draw.rect(display, (0, 0, 255),
                              pygame.Rect(coordinates[0][0], coordinates[0][1], multiplier, multiplier))
@@ -155,6 +151,7 @@ def draw():
     pygame.display.flip()
     clock.tick(ticks)
 
+
 # Animate all of the explored nodes
 def animate(travelList):
     speed = int((len(travelList) - 1000) * 15 / 50000 + 5)
@@ -182,6 +179,7 @@ def animate(travelList):
     pygame.display.flip()
     clock.tick(ticks)
 
+
 # Animate the final path after it finds the goal node
 def animatePath(travelList):
     display.fill((0, 0, 0))
@@ -192,6 +190,7 @@ def animatePath(travelList):
         draw()
         pygame.display.flip()
         clock.tick(ticks)
+
 
 # Exit pygame after position inputs so windows doesn't crash
 if not manual:
@@ -209,7 +208,6 @@ if not manual:
     pygame.time.wait(1000)
     pygame.display.quit()
 
-
 print("Computing...")
 
 # Use A* to solve for path
@@ -218,16 +216,16 @@ if aStar:
     aStar = AStar([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
                   [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
     solution = aStar.solve()
+    pygame.init()
+    display = pygame.display.set_mode((width, height))
+    pygame.font.init()
+    myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
+    ticks = 400
+    clock = pygame.time.Clock()
     if len(solution) == 3:
         animate(solution[2])
         print("Unreachable goal.")
     else:
-        pygame.init()
-        display = pygame.display.set_mode((width, height))
-        pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
-        ticks = 400
-        clock = pygame.time.Clock()
         path, search = solution[0], solution[1]
         end = time()
         print("It took {} seconds to solve.".format(end - start))
@@ -243,16 +241,17 @@ else:
     dijkstra = Dijkstra([int(coordinates[0][0] / multiplier), int(200 - coordinates[0][1] / multiplier)],
                         [int(coordinates[1][0] / multiplier), int(200 - coordinates[1][1] / multiplier)], clearance)
     solution = dijkstra.solve()
+    pygame.init()
+    display = pygame.display.set_mode((width, height))
+    pygame.font.init()
+    myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
+    ticks = 400
+    clock = pygame.time.Clock()
     if len(solution) == 3:
         animate(solution[2])
         print("Unreachable goal.")
     else:
-        pygame.init()
-        display = pygame.display.set_mode((width, height))
-        pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 10 * multiplier)
-        ticks = 400
-        clock = pygame.time.Clock()
+
         path, search = solution[0], solution[1]
         end = time()
         print("It took {} seconds to solve.".format(end - start))

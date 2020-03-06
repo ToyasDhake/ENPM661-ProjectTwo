@@ -2,7 +2,9 @@ from copy import deepcopy
 from math import sqrt
 
 
+# This class will hold attributes of each position
 class Node:
+    # Initialize
     def __init__(self, env, goal, parent=None, action=None):
         self.env = env
         self.parent = parent
@@ -11,8 +13,10 @@ class Node:
             self.g = parent.g + 1
         else:
             self.g = 0
+        # Heuristic function
         self.weight = self.g + sqrt((env[0] - goal[0]) ** 2 + (env[1] - goal[1]) ** 2)
 
+    # Solve for path from goal to start node
     def path(self):
         node, p = self, []
         while node:
@@ -20,6 +24,7 @@ class Node:
             node = node.parent
         yield from reversed(p)
 
+    # Get possible actions
     def actions(self):
         if self.action is None:
             return self.env.possibleMoves()
@@ -28,10 +33,12 @@ class Node:
 
 
 class Environment:
+    # Initialize
     def __init__(self, currentPosition, clearance):
         self.currentPosition = currentPosition
         self.clearance = clearance
 
+    # Check if node is in rectangle using half planes
     def insideRectangle(self, position):
         temp = False
         if ((1112 / 13) - ((38 / 65) * (position[0] + self.clearance * 0.5))) <= (
@@ -54,12 +61,14 @@ class Environment:
             temp = True
         return temp
 
+    # Check if node is in cirlce
     def insideCircle(self, position):
         if (position[0] - 225) ** 2 + (position[1] - 150) ** 2 <= (25 + self.clearance) ** 2:
             return True
         else:
             return False
 
+    # Check if node is in elipse
     def insideElipse(self, position):
         if ((position[0] - 150) ** 2) / (40 + self.clearance) ** 2 + ((position[1] - 100) ** 2) / (
                 20 + self.clearance) ** 2 <= 1:
@@ -67,6 +76,7 @@ class Environment:
         else:
             return False
 
+    # Check if node is in diamond using half planes
     def insideDiamond(self, position):
         temp = False
         if (145 - ((3 / 5) * (position[0] + self.clearance * 0.5))) <= (position[1] + self.clearance * 0.866) and (
@@ -87,6 +97,7 @@ class Environment:
             temp = True
         return temp
 
+    # Check if node is in polygon using half planes
     def insidePoly(self, position):
         temp = False
         if (((position[0] - self.clearance * 0.7071) + 100) <= (position[1] + self.clearance * 0.7071) and (
@@ -125,6 +136,7 @@ class Environment:
             temp = True
         return temp
 
+    # Check if position is inside map or inside an object
     def possiblePostion(self, position):
         possiblity = True
         if position[0] < self.clearance:
@@ -147,6 +159,7 @@ class Environment:
             possiblity = False
         return possiblity
 
+    # Check if each action is possible
     def possibleMoves(self, remove='A'):
         actions = []
         if self.possiblePostion([self.currentPosition[0], self.currentPosition[1] + 1]):
@@ -183,6 +196,7 @@ class Environment:
             actions.remove('UL')
         return actions
 
+    # Move robot position according to action
     def move(self, val):
         temp = deepcopy(self)
         if val == 'U':
@@ -207,41 +221,53 @@ class Environment:
             temp.currentPosition[1] -= 1
         return temp
 
+
 # AStar class is called to solve for path using A*
 class AStar:
+    # Initiation method
     def __init__(self, start, goal, clearance):
         self.start = start
         self.goal = goal
         self.clearance = clearance
 
+    # Method to solve a A* object
     def solve(self):
         search = []
+        # Set current node to start and add start node to the node list and node search dictionary
         CurrentNode = Node(self.start, self.goal)
         NodeList = [CurrentNode]
         NodeDict = {tuple(CurrentNode.env)}
+        # Check if the current node is the goal node
         while CurrentNode.env != self.goal:
+            # Keep checking if there are nodes in list
             if len(NodeList) > 0:
+                # Set current node to the first node in the list and then delete from list
                 CurrentNode = NodeList.pop()
                 search.append(CurrentNode.env)
                 Course = Environment(CurrentNode.env, self.clearance)
+                # Check all of the possible actions
                 for action in Course.possibleMoves():
                     temp = Course.move(action)
                     tempNode = Node(temp.currentPosition, self.goal, CurrentNode, action)
+                    # Search dictonary and add node to list and dictionary if it hasn't been explored yet
                     if tuple(tempNode.env) not in NodeDict:
                         NodeList.append(tempNode)
                         NodeDict.add(tuple(tempNode.env))
                     else:
+                        # Check if node has shorter path than existing one
                         for i in range(len(NodeList)):
                             if NodeList[i].env == tempNode.env:
                                 distNodeList = sqrt((NodeList[i].parent.env[0] - self.start[0]) ** 2 + (
-                                            NodeList[i].parent.env[1] - self.start[1]) ** 2)
+                                        NodeList[i].parent.env[1] - self.start[1]) ** 2)
                                 distTempNode = sqrt((tempNode.parent.env[0] - self.start[0]) ** 2 + (
-                                            tempNode.parent.env[1] - self.start[1]) ** 2)
+                                        tempNode.parent.env[1] - self.start[1]) ** 2)
                                 if distTempNode < distNodeList:
                                     NodeList[i] = tempNode
+                # Sort list of nodes based on cost
                 NodeList.sort(key=lambda x: x.weight, reverse=True)
             else:
                 return -1, CurrentNode.path(), search
+        # solve for path
         x = CurrentNode.path()
         path = []
         for node in x:

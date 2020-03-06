@@ -20,28 +20,28 @@ the goal position.
 
 ## Demo Steps
 
-Run code Main.py for demo-
+Run code for rigid robot demo-
 
 ```
 open terminal in project folder.
-python Main.py
+python Dijkstra_rigid.py
 Enter radius and clearance
 Enter start position as "5, 5" (without qoutes)
 Enter goal position as "295, 195" (without qoutes)
 ```
 
-By default code runs for rigid robot. To compute path for point robot use argument "-p":
+Run code for point robot demo-
 ```
 open terminal in project folder.
-python Main.py -p
+python Dijkstra_point.py
 Enter start position as "5, 5" (without qoutes)
 Enter goal position as "295, 195" (without qoutes)
 ```
 
-To enter start and goal position from command line use argument "-m":
+To enter start and goal position from GUI use argument "-g":
 ```
 open terminal in project folder.
-python Main.py -g
+python Dijkstra_point.py -g
 Enter radius and clearance
 click on the pygame window to set start position and goal posiiton.
 ```
@@ -49,21 +49,18 @@ click on the pygame window to set start position and goal posiiton.
 A* implementation:
 ```
 open terminal in project folder.
-python Main.py -p -g -a
+python Dijkstra_point.py -g -a
 click on the pygame window to set start position and goal posiiton.
 ```
 
 Main.py arguments
 
--p ,    Use point robot.
-
 -g,     Using GUI instead of entering start and goal positions in command line.
 
 -a,     Use A* algorithm to solve the problem instead of Dijkstra's algorithm.
 
-By default Main.py uses Dijkstra's algorithm's on a rigid robot and accept start and goal positions from GUI.
 
-Installing pygame
+#### Installing pygame
 ```
 pip install pygame
 ```

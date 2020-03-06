@@ -1,5 +1,6 @@
 from Mechanism import Environment, Node
 
+
 # Dijkstra class is called to solve for path using Dijkstra
 class Dijkstra:
 
@@ -8,7 +9,7 @@ class Dijkstra:
         self.start = start
         self.goal = goal
         self.clearance = clearance
-    
+
     # Method to solve a Dijkstra object
     def solve(self):
         search = []
@@ -38,7 +39,7 @@ class Dijkstra:
                 NodeList.sort(key=lambda x: x.weight, reverse=True)
             else:
                 return -1, CurrentNode.path(), search
-        
+
         # solve for path
         x = CurrentNode.path()
         path = []

@@ -1,6 +1,7 @@
 from copy import deepcopy
 from math import sqrt
 
+
 # This class will hold attributes of each position
 class Node:
     # Initialize 
@@ -21,7 +22,7 @@ class Node:
             p.append(node)
             node = node.parent
         yield from reversed(p)
-    
+
     # Get possible actions
     def actions(self):
         if self.action is None:
