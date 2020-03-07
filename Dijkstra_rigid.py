@@ -1,5 +1,5 @@
 # ENPM661 Project 2
-# Contributors Toyas Dhake
+# Contributors Toyas Dhake, Loic Barret
 
 from Dijkstra import Dijkstra
 from Mechanism import Environment
